@@ -9,11 +9,16 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var cameraPreview: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
 
-
+    @IBAction func cameraButtonPressed(_ sender: UIButton) {
+    }
+    
 }
 
