@@ -29,15 +29,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         checkPermissions()
     }
 
+    // Camera button gets image from camera input
     @IBAction func cameraButtonPressed(_ sender: UIButton) {
         
-        self.imagePicker.sourceType = .camera
-        self.imagePicker.allowsEditing = true
-        self.imagePicker.delegate = self
-        present(self.imagePicker, animated: true)
+        // Run if camera available
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            self.imagePicker.sourceType = .camera
+            self.imagePicker.allowsEditing = true
+            self.imagePicker.delegate = self
+            present(self.imagePicker, animated: true)
+        }
+        
+        // Print message if camera not available
+        else {
+            print("Camera not available.")
+        }
+        
         
     }
     
+    // Photo button gets image from photo library
     @IBAction func photoButtonPressed(_ sender: UIButton) {
         
         self.imagePicker.sourceType = .photoLibrary
@@ -45,6 +56,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
+    // Get authorization at startup
     func checkPermissions() {
         if PHPhotoLibrary.authorizationStatus() != PHAuthorizationStatus.authorized {
             PHPhotoLibrary.requestAuthorization({ (status: PHAuthorizationStatus) -> Void in ()
