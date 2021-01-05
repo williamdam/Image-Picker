@@ -32,6 +32,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Camera button gets image from camera input
     @IBAction func cameraButtonPressed(_ sender: UIButton) {
         
+        getFromCamera()
+        
+    }
+    
+    // Photo button gets image from photo library
+    @IBAction func photoButtonPressed(_ sender: UIButton) {
+        
+        getFromPhotoLibrary()
+        
+    }
+    
+    func getFromCamera() {
         // Run if camera available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             self.imagePicker.sourceType = .camera
@@ -44,16 +56,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         else {
             print("Camera not available.")
         }
-        
-        
     }
     
-    // Photo button gets image from photo library
-    @IBAction func photoButtonPressed(_ sender: UIButton) {
-        
+    func getFromPhotoLibrary() {
         self.imagePicker.sourceType = .photoLibrary
         self.present(self.imagePicker, animated: true, completion: nil)
-        
     }
     
     // Get authorization at startup
