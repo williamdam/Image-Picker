@@ -10,10 +10,10 @@ import Photos
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    @IBOutlet weak var photoButton: UIButton!
+    // Image view to display user selected photo
     @IBOutlet weak var imagePreview: UIImageView!
     
-    // Instantiate image picker controller and set var
+    // Instantiate image picker controller and assign var imagePicker
     var imagePicker = UIImagePickerController()
     
     override func viewDidLoad() {
@@ -22,38 +22,50 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Set delegate function
         imagePicker.delegate = self
         
-        // Check permission to access photos
-        checkPermissions()
     }
 
-    // Action Sheet popup camera or photo library
+    // Function: addPhotoButtonPressed()
+    // Args: IBAction
+    // Returns: None
+    // Description: When "Add Photo" button pressed, present photo
+    // source options in action sheet.
+    // Dependencies: getFromCamera(), getFromPhotoLibrary()
     @IBAction func addPhotoButtonPressed(_ sender: UIButton) {
         
+        // Instantiate action sheet
         let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
         
+        // Option 1: Camera
         let useCamera = UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
             
             self.getFromCamera()
             
         })
         
+        // Option 2: Photo Library
         let usePhotoLibrary = UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
             
             self.getFromPhotoLibrary()
             
         })
         
+        // Option 3: Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
+        // Add all options to action sheet
         optionMenu.addAction(useCamera)
         optionMenu.addAction(usePhotoLibrary)
         optionMenu.addAction(cancelAction)
         
+        // Display action sheet
         self.present(optionMenu, animated: true, completion: nil)
-        
         
     }
     
+    // Function: getFromCamera()
+    // Args: None
+    // Returns: Void
+    // Description: Open camera if available.
     func getFromCamera() {
         
         // Run if camera available
@@ -70,6 +82,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    // Function: getFromPhotoLibrary()
+    // Args: None
+    // Returns: Void
+    // Description: Open photo library
     func getFromPhotoLibrary() {
         
         self.imagePicker.sourceType = .photoLibrary
@@ -77,27 +93,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
-    // Get authorization at startup
-    func checkPermissions() {
-        if PHPhotoLibrary.authorizationStatus() != PHAuthorizationStatus.authorized {
-            PHPhotoLibrary.requestAuthorization({ (status: PHAuthorizationStatus) -> Void in ()
-            })
-        }
-        
-        if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.authorized {
-        } else {
-            PHPhotoLibrary.requestAuthorization(requestAuthorizationhandler)
-        }
-    }
-    
-    func requestAuthorizationhandler(status: PHAuthorizationStatus) {
-        if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.authorized {
-            print("Access granted to use Photo Library")
-        } else {
-            print("We don't have access to your Photos.")
-        }
-    }
-    
+    // Function: imagePickerController()
+    // Args: None
+    // Returns: Void
+    // Description: Delegate function sets imagePreview.image
+    // to image returned from UIImagePickerController()
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         imagePreview?.image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
