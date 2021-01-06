@@ -9,12 +9,9 @@ import UIKit
 import Photos
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
-    @IBOutlet weak var cameraButton: UIButton!
-    @IBOutlet weak var cameraPreview: UIImageView!
     
     @IBOutlet weak var photoButton: UIButton!
-    @IBOutlet weak var photoPreview: UIImageView!
+    @IBOutlet weak var imagePreview: UIImageView!
     
     // Instantiate image picker controller and set var
     var imagePicker = UIImagePickerController()
@@ -29,21 +26,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         checkPermissions()
     }
 
-    // Camera button gets image from camera input
-    @IBAction func cameraButtonPressed(_ sender: UIButton) {
+    // Action Sheet popup camera or photo library
+    @IBAction func addPhotoButtonPressed(_ sender: UIButton) {
         
-        getFromCamera()
+        let optionMenu = UIAlertController(title: nil, message: "Choose Option", preferredStyle: .actionSheet)
         
-    }
-    
-    // Photo button gets image from photo library
-    @IBAction func photoButtonPressed(_ sender: UIButton) {
+        let useCamera = UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
+            
+            self.getFromCamera()
+            
+        })
         
-        getFromPhotoLibrary()
+        let usePhotoLibrary = UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
+            
+            self.getFromPhotoLibrary()
+            
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        optionMenu.addAction(useCamera)
+        optionMenu.addAction(usePhotoLibrary)
+        optionMenu.addAction(cancelAction)
+        
+        self.present(optionMenu, animated: true, completion: nil)
+        
         
     }
     
     func getFromCamera() {
+        
         // Run if camera available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             self.imagePicker.sourceType = .camera
@@ -59,8 +71,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func getFromPhotoLibrary() {
+        
         self.imagePicker.sourceType = .photoLibrary
         self.present(self.imagePicker, animated: true, completion: nil)
+        
     }
     
     // Get authorization at startup
@@ -86,11 +100,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if picker.sourceType == .photoLibrary {
-            photoPreview?.image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-        } else {
-            cameraPreview?.image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
-        }
+        imagePreview?.image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
 
         picker.dismiss(animated: true, completion: nil)
         
